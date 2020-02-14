@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Plugin extends JavaPlugin {
+	private final long BEDTIME_END = 23457;
 	private final long BEDTIME_START = 12542;
 	private final String WORLD_NAME = "world";
 
@@ -22,7 +23,8 @@ public class Plugin extends JavaPlugin {
 				long playersInBedCount = world.getPlayers().stream().filter(p -> p.isSleeping()).count();
 
 				if (time > BEDTIME_START) {
-					world.setFullTime(world.getFullTime() + playersInBedCount);
+					long newTime = world.getFullTime() + playersInBedCount;
+					world.setFullTime(newTime <= BEDTIME_END ? newTime : world.getFullTime() + (newTime - BEDTIME_END));
 				}
 			}
 		}, 0, 1);
